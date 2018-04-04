@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Twotter</title>
+  </head>
+  <body>
+    <div id="timeline">
+      <h4>Timeline Text Here:</h4>
+
+    </div>
+    <div class = 'container'>
+        <form>
+          <h4>Search Tweet:</h4>
+          <input type="text" id = 'search-tweet-form'>
+        </form>
+        <button id ='search-tweet-submit'>Search</button>
+        <div id='search-timeline'>
+          <h4>Result of Search Here:</h4>
+        </div>
+      </div>
+    <div class = 'container'>
+      <form>
+        <h4>Tweet:</h4>
+        <textarea class = 'form-control' id='post-tweet-form'></textarea>
+      </form>
+      <button id='post-tweet-submit'>Post</button>
+    </div>
+<script
+src="https://code.jquery.com/jquery-3.3.1.min.js"
+integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous"></script>
+  </body>
+
+  <script>
+  $.ajax({
+    url: "http://localhost:3000/tweets",
+    method: "GET",
+    dataType: "json",
+    success: function(response) {
+     console.log(response)
+     response.timeline.map((result) => {
+        $("#timeline").append('<b>' + result.text + '</b><br/>');
+      })
+    },
+    error: (err) => {
+      console.log(err);
+    }
+  })
+
+  $("#post-tweet-submit").on("click", function(){
+      $.ajax({
+        url:"http://localhost:3000/tweets",
+        method: "POST",
+        data: {
+          tweet: $("#post-tweet-form").val()
+        },
+        dataType: 'json',
+        success:function(response){
+          console.log("post success",response)
+          $('#timeline').prepend($('#post-tweet-form').val())
+          location.reload()
+      },
+      error: (err) =>{
+        console.log(err)
+      }
+    })
+  })
+
+  $("#search-tweet-submit").on("click", function(){
+  $.ajax({
+    url:"http://localhost:3000/tweets/search",
+    method: "GET",
+    data: {
+      name: $("#search-tweet-form").val()
+    },
+    dataType: 'json',
+    success:function(response){
+      console.log(response)
+      response.timeline.statuses.map(data =>{
+        $("#search-timeline").prepend(
+        '<b>' + data.text + '</b><br/>'
+        )
+      })
+    }
+  })
+})
+  </script>
+
+
+</html>
