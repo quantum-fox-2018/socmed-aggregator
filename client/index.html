@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+    ol{
+      list-style-type: i;
+    }
+    </style>
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="posting">
+        <input type="text" name="pesan" id="pesan" value="">
+        <button type="button" id="kirim">send message twitter</button>
+    </div>
+
+    <div class="searching">
+        <input type="text" name="key" id="key" value="">
+        <button type="button" id="search">search tweet</button>
+    </div>
+    <div class="timeline">
+
+    </div>
+    <div class="trending">
+
+    </div>
+
+  </body>
+  <script type="text/javascript">
+  $.ajax({
+      url:'http://localhost:3000/users',
+      method:'GET',
+      dataType:"JSON",
+      success:(datas)=>{
+        console.log(datas);
+        datas.map((value)=>{
+          $(".timeline").append('<b>'+value.user.name+' </b> '+value.text+'<br />')
+        })
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    });
+    $.ajax({
+      url:'http://localhost:3000/users/trends',
+      method:'GET',
+      dataType:"JSON",
+      success:(datas)=>{
+        datas.map((value)=>{
+          value.trends.forEach((values,i)=>{
+            $(".trending").append(`${i+1}.${values.name}<br>`)
+          })
+        })
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    });
+    $( "#kirim" ).click(function() {
+      var obj = {
+        pesan : $('#pesan').val()
+      }
+      $.ajax({
+        url:'http://localhost:3000/users',
+        method:'POST',
+        dataType:"JSON",
+        data:obj,
+        success:(datas)=>{
+          console.log(datas);
+          location.reload();
+        },
+        error:(err)=>{
+          console.log(err);
+        }
+      });
+    });
+    $( "#search" ).click(function() {
+      var obj = {
+        key : $('#key').val()
+      }
+      $.ajax({
+        url:`http://localhost:3000/users/search?tweet=${obj.key}`,
+        method:'GET',
+        dataType:"JSON",
+        success:(datas)=>{
+          console.log(datas);
+          // datas.map((value)=>{
+          //   // $(".searching").append(`${i+1}.${values.name}<br>`)
+          // })
+        },
+        error:(err)=>{
+          console.log(err);
+        }
+      });
+    });
+
+
+  </script>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <fb:login-button
+      scope="public_profile,email"
+      onlogin="checkLoginState();"
+      id="login">
+    </fb:login-button>
+    <button type="button" name="button" id="logout" onclick="logouts()">logout</button>
+  </body>
+
+
+
+
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script>
+//initialize fb
+//fb.api('/me') informasi berupa email dll
+// insert
+window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '592784331071735',
+    cookie     : true,
+    xfbml      : true,
+    version    : 'v2.12'
+  });
+
+  FB.AppEvents.logPageView();
+
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+};
+
+
+
+(function(d, s, id){
+   var js, fjs = d.getElementsByTagName(s)[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement(s); js.id = id;
+   js.src = "https://connect.facebook.net/en_US/sdk.js";
+   fjs.parentNode.insertBefore(js, fjs);
+ }(document, 'script', 'facebook-jssdk'));
+
+ function checkLoginState() {
+   FB.getLoginStatus(function(response) {
+     statusChangeCallback(response);
+   });
+ }
+
+ function statusChangeCallback(response){
+   if(response.status === 'connected'){
+     console.log(response);
+     axios.get('http://localhost:3000/facebook/signin',{
+       headers:{
+         accessToken:response.authResponse.accessToken
+       }
+     })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+     console.log('conect');
+     $('#logout').show()
+     $('#login').hide()
+
+   }else{
+     $('#logout').hide()
+     $('#login').show()
+   }
+ }
+
+ function logouts(){
+   FB.logout(function(response) {
+     statusChangeCallback(response)
+   });
+ }
+</script>
+
+
+
+
+</html>
