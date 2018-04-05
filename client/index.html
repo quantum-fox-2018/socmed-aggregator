@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sosmed Aggregator</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div><a href="profile.html">My Profile</a></div>
+    <div class="posting">
+        Update Tweet:
+        <input type="text" id="status" value="" placeholder="tweet something">
+        <button type="button" id="updateTweet" onclick="postTweet()"> Update Tweet </button>
+    </div>
+
+    <div class="search">
+        Search from twitter: 
+        <input type="text" id="key" value="" placeholder="search">
+        <button type="button" id="search"> Search Tweet </button>
+    </div>
+
+    <div class="followSomeone">
+      Follow: 
+      <input type="text" id="screen_name" value="" placeholder="user id">
+      <button type="button" id="followSomeone"> Follow </button>
+    </div>
+
+    <div class="unfollowSomeone">
+      Unfollow: 
+      <input type="text" id="screen_name2" value="" placeholder="user id">
+      <button type="button" id="unfollowSomeone"> Unfollow </button>
+    </div>
+
+    <div class="senddm">
+      Send DM to: 
+      <input type="text" id="screen_name1" value="" placeholder="user id">
+      Message:
+      <input type="text" id="text" value="" placeholder="message">
+      <button type="button" id="senddm"> Search Tweet </button>
+    </div>
+
+    <h2>Timeline: </h2>
+    <div class="timeline">
+
+    </div>
+
+    <h2>Search:</h2> 
+    <div class="searchh">
+
+    </div>
+
+    <div class="trending">
+
+    </div>
+    <script src="twotter-api.js"></script>
+  </body>
