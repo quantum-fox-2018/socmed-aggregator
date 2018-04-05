@@ -5,6 +5,7 @@ require('dotenv').config()
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
+  console.log('helo masuk sini ')
   var oauth = new OAuth.OAuth(
       'https://api.twitter.com/oauth/request_token',
       'https://api.twitter.com/oauth/access_token',

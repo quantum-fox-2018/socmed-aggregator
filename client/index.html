@@ -2,7 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">  -->
     <title></title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style media="screen">
     ol{
       list-style-type: i;
@@ -32,72 +34,81 @@
 
   </body>
   <script type="text/javascript">
-  $.ajax({
-      url:'http://localhost:3000/users',
-      method:'GET',
-      dataType:"JSON",
-      success:(datas)=>{
-        console.log(datas);
-        datas.map((value)=>{
-          $(".timeline").append('<b>'+value.user.name+' </b> '+value.text+'<br />')
-        })
-      },
-      error:(err)=>{
-        console.log(err);
-      }
-    });
-    $.ajax({
-      url:'http://localhost:3000/users/trends',
-      method:'GET',
-      dataType:"JSON",
-      success:(datas)=>{
-        datas.map((value)=>{
-          value.trends.forEach((values,i)=>{
-            $(".trending").append(`${i+1}.${values.name}<br>`)
-          })
-        })
-      },
-      error:(err)=>{
-        console.log(err);
-      }
-    });
-    $( "#kirim" ).click(function() {
-      var obj = {
-        pesan : $('#pesan').val()
-      }
-      $.ajax({
-        url:'http://localhost:3000/users',
-        method:'POST',
-        dataType:"JSON",
-        data:obj,
-        success:(datas)=>{
-          console.log(datas);
-          location.reload();
-        },
-        error:(err)=>{
-          console.log(err);
-        }
-      });
-    });
-    $( "#search" ).click(function() {
-      var obj = {
-        key : $('#key').val()
-      }
-      $.ajax({
-        url:`http://localhost:3000/users/search?tweet=${obj.key}`,
-        method:'GET',
-        dataType:"JSON",
-        success:(datas)=>{
-          console.log(datas);
-          // datas.map((value)=>{
-          //   // $(".searching").append(`${i+1}.${values.name}<br>`)
-          // })
-        },
-        error:(err)=>{
-          console.log(err);
-        }
-      });
-    });
+  axios.get('http://localhost:3000/users').then(datas => {
+    console.log(datas);
+    datas.map((value)=>{
+      $(".timeline").append('<b>'+value.user.name+' </b> '+value.text+'<br />')
+    })
+  }).catch(err => {
+    console.log('woi  ',err);
+  })
+
+  // $.ajax({
+  //     url:'http://localhost:3000/users',
+  //     method:'GET',
+  //     dataType:"JSON",
+  //     success:(datas)=>{
+  //       console.log(datas);
+  //       datas.map((value)=>{
+  //         $(".timeline").append('<b>'+value.user.name+' </b> '+value.text+'<br />')
+  //       })
+  //     },
+  //     error:(err)=>{
+  //       console.log(err);
+  //     }
+  //   });
+  //   $.ajax({
+  //     url:'http://localhost:3000/users/trends',
+  //     method:'GET',
+  //     dataType:"JSON",
+  //     success:(datas)=>{
+  //       datas.map((value)=>{
+  //         value.trends.forEach((values,i)=>{
+  //           $(".trending").append(`${i+1}.${values.name}<br>`)
+  //         })
+  //       })
+  //     },
+  //     error:(err)=>{
+  //       console.log(err);
+  //     }
+  //   });
+  //   $( "#kirim" ).click(function() {
+  //     var obj = {
+  //       pesan : $('#pesan').val()
+  //     }
+  //     $.ajax({
+  //       url:'http://localhost:3000/users',
+  //       method:'POST',
+  //       dataType:"JSON",
+  //       data:obj,
+  //       success:(datas)=>{
+  //         console.log(datas);
+  //         location.reload();
+  //       },
+  //       error:(err)=>{
+  //         console.log(err);
+  //       }
+  //     });
+  //   });
+  //   $( "#search" ).click(function() {
+  //     var obj = {
+  //       key : $('#key').val()
+  //     }
+  //     $.ajax({
+  //       url:`http://localhost:3000/users/search?tweet=${obj.key}`,
+  //       method:'GET',
+  //       dataType:"JSON",
+  //       success:(datas)=>{
+  //         console.log(datas);
+  //         // datas.map((value)=>{
+  //         //   // $(".searching").append(`${i+1}.${values.name}<br>`)
+  //         // })
+  //       },
+  //       error:(err)=>{
+  //         console.log(err);
+  //       }
+  //     });
+  //   });
 
 
   </script>
