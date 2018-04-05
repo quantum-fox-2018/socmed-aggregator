@@ -126,7 +126,7 @@ module.exports = {
         )
     },
     getTweetBySearch: (req, res) => {
-        const {search} = req.body
+        const {search} = req.params
         oauth.get(
             `https://api.twitter.com/1.1/search/tweets.json?q=${search}`,
             process.env.ACCESSTOKEN,

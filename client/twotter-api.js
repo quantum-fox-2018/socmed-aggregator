@@ -58,13 +58,14 @@ $("#search").click(function() {
     }
     console.log(obj.search)
     $.ajax({
-        url:`http://localhost:3000/twotter/search?q=${obj.search}`,
+        url:`http://localhost:3000/twotter/search/${obj.search}`,
         method:'GET',
         dataType:"JSON",
+        data:obj,
         success:(datas)=>{
         console.log(datas)
         datas.tweets.statuses.forEach(value => {
-            $('.timeline').append(`
+            $('.searchh').append(`
                 <div>
                     <div>
                     <img src=${value.user.profile_image_url}>
@@ -87,7 +88,7 @@ $("#search").click(function() {
 
 $("#senddm").click(function() {
     var obj = {
-        screen_name: $('#screen_name').val(),
+        screen_name: $('#screen_name1').val(),
         text: $('#text').val()
     }
     $.ajax({
@@ -110,6 +111,24 @@ $("#followSomeone").click(function() {
     }
     $.ajax({
       url:'http://localhost:3000/twotter/followSomeone',
+      method:'POST',
+      dataType:"JSON",
+      data:obj,
+      success:(data)=>{
+        console.log(data);
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    });
+});
+
+$("#unfollowSomeone").click(function() {
+    var obj = {
+        screen_name: $('#screen_name2').val()
+    }
+    $.ajax({
+      url:'http://localhost:3000/twotter/unfollowSomeone',
       method:'POST',
       dataType:"JSON",
       data:obj,

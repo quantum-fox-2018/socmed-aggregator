@@ -7,7 +7,7 @@ router
     .get('/getFriendList', getFriendList)
     .get('/getFollowerList', getFollowerList)
     .get('/trends', getTrends)
-    .get('/search', getTweetBySearch)
+    .get('/search/:search', getTweetBySearch)
     .post('/followSomeone', followSomeone)
     .post('/unfollowSomeone', unfollowSomeone)
     .post('/deleteTweet', deleteTweet)
