@@ -1,4 +1,5 @@
 loadTweets()
+loadMyTweets()
 
 function loadTweets() {
     $('.timeline').empty();
@@ -30,6 +31,38 @@ function loadTweets() {
         })
     })
 }
+
+function loadMyTweets() {
+    $('.mytweet').empty();
+    $.ajax({
+        method: "GET",
+        url: "http://localhost:3000/twotter/getTweet",
+        dataType: "JSON",
+        headers: {
+          token:localStorage.token
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    })
+    .done(function(data) {
+        console.log(data);
+        data.tweets.forEach(value => {
+            $('.mytweet').append(`
+                <div>
+                    <img src=${value.user.profile_image_url}>
+                </div>
+                <div>
+                    <p><strong>${value.user.name}</strong>  @${value.user.screen_name}<br>
+                        ${value.text}<br>
+                        <span>${value.created_at}</span>
+                        </p>
+                </div>
+            `)
+        })
+    })
+}
+
 
 $("#updateTweet").click(function() {
     var obj = {
