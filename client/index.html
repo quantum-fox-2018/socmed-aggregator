@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Twatta</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="./main.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="#">
+      <img src="./assets/twitter-logo-button.png" width="30" height="30" class="d-inline-block align-top" alt="">
+      Twatt
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="searchtweet">Search</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+    <form>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Say something!</label>
+        <textarea class="form-control" id="tweet" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" id="addtweet">Post</button>
+    </form>
+  </div>
+  
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3" id="trending">
+        <p>Trending topic</p>
+        
+      </div>
+      <div class="col-md-9" id="timeline">
+      </div>
+    </div>
+
+  </div>
+  <!-- <div>Icons made by <a href="https://www.flaticon.com/authors/bogdan-rosu" title="Bogdan Rosu">Bogdan Rosu</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script>
+    $.ajax({
+      url:"http://localhost:3000/tweet",
+      method: "GET",
+      dataType: 'json',
+      success: function(response){
+        console.log(response.timeline)
+        response.timeline.map(data =>{
+          $("#timeline").append(`
+          <div class="media">
+            <img class="align-self-start mr-3" src="${data.user.profile_image_url}" alt="Generic placeholder image">
+            <div class="media-body">
+              <h5 class="mt-0">${data.user.name} |<small>${data.user.screen_name}</small> |<small> ${data.created_at}</small> </h5>
+              <p>${data.text}</p>
+            </div>
+          </div>
+        `)
+        })
+      }
+    })
+    $.ajax({
+      url:"http://localhost:3000/tweet/trends",
+      method: "GET",
+      dataType: 'json',
+      success: function(response){
+        console.log(response.timeline[0].trends)
+        response.timeline[0].trends.map(data =>{
+          $("#trending").append(`
+            <div class="list-group">
+              <a class="list-group-item list-group-item-action">${data.name}</a>
+            </div>
+        `)
+        })
+      }
+    })
+    $("#addtweet").on("click", function(){
+      $.ajax({
+        url:"http://localhost:3000/tweet",
+        method: "POST",
+        data: {
+          tweet: $("#tweet").val()
+        },
+        dataType: 'json',
+        success:function(response){
+          console.log("post tweet",response)
+          $('#timeline').prepend($('#tweet').val())
+          location.reload()
+        }
+      })
+    })
+
+    $("#searchtweet").on("click", function(){
+      $.ajax({
+        url:"http://localhost:3000/tweet/search",
+        method: "GET",
+        data: {
+          name: $("#search").val()
+        },
+        dataType: 'json',
+        success:function(response){
+          console.log(response)
+          response.timeline.statuses.map(data =>{
+          $("#timeline").prepend(`
+          <div class="media">
+            <img class="align-self-start mr-3" src="${data.user.profile_image_url}" alt="Generic placeholder image">
+            <div class="media-body">
+              <h5 class="mt-0">${data.user.name} |<small>${data.user.screen_name}</small> |<small> ${data.created_at}</small> </h5>
+              <p>${data.text}</p>
+            </div>
+          </div>
+        `)
+        })
+        }
+      })
+    })
+  </script>
+</body>
+</html>
