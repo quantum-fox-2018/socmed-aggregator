@@ -61,6 +61,60 @@ function loadMyTweets() {
             `)
         })
     })
+
+    $('.followers').empty();
+    $.ajax({
+        method: "GET",
+        url: "http://localhost:3000/twotter/getFollowerList",
+        dataType: "JSON",
+        headers: {
+          token:localStorage.token
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    })
+    .done(function(data) {
+        console.log(data);
+        data.tweets.users.forEach(value => {
+            $('.followers').append(`
+                <div>
+                    <img src=${value.profile_image_url}>
+                </div>
+                <div>
+                    <p><strong>${value.name}</strong>  @${value.screen_name}<br>
+                        </p>
+                </div>
+            `)
+        })
+    })
+
+    $('.following').empty();
+    $.ajax({
+        method: "GET",
+        url: "http://localhost:3000/twotter/getFriendList",
+        dataType: "JSON",
+        headers: {
+          token:localStorage.token
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    })
+    .done(function(data) {
+        console.log(data);
+        data.tweets.users.forEach(value => {
+            $('.following').append(`
+                <div>
+                    <img src=${value.profile_image_url}>
+                </div>
+                <div>
+                    <p><strong>${value.name}</strong>  @${value.screen_name}<br>
+                        </p>
+                </div>
+            `)
+        })
+    })
 }
 
 
