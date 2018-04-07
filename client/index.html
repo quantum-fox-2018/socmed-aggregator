@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Facebook Login JavaScript Example</title>
+    <meta charset="UTF-8">
+    <style>
+      #timeline {
+        width: 470px;
+        border: 1px solid black;
+        padding: 5px;
+        margin: 10px;
+      }
+
+      .tlClass {
+        background: gray;
+        margin: 5px;
+        padding: 5px;
+        width: 450px;
+      }
+    </style>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous"></script>
+  </head>
+  <body>
+
+    <script src="./lib/fb.js"></script>
+
+    <!--
+      Below we include the Login Button social plugin. This button uses
+      the JavaScript SDK to present a graphical Login button that triggers
+      the FB.login() function when clicked.
+    -->
+
+    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+    </fb:login-button>
+
+    <div id="status">
+    </div>
+    <br>
+    <div id="tweets">
+        <label for="sendTweets">Send Tweets :</label><br>
+        <input type="text" name="sendTweets" id="sendTweets" /><br>
+        <button onclick="sendTweets()">Send Tweets</button><br><br>
+
+
+        <label for="searchTweets">Search Tweets :</label><br>
+        <input type="text" name="searchTweets" id="searchTweets" /><br>
+        <button onclick="searchTweets()">Search Tweets</button><br><br>
+
+
+        <h3> Timeline : </h3>
+        <div id="timeline"></div><br>
+        <button onclick="getTimeline()">Refresh Timeline</button>
+
+    </div>
+
+    <script>
+      function sendTweets(){
+        // console.log('Send Tweets');
+        let txtSend = document.querySelector('#sendTweets')
+        let tweet = txtSend.value
+
+        // console.log(sendTweet);
+        axios.post('http://localhost:3000/tweets', {
+          tweet
+        })
+             .then(function(response) {
+                console.log('response- ',response);
+                getTimeline()
+             })
+             .catch(function(error) {
+                console.log('error', error);
+             })
+      }
+
+      function getTimeline(){
+        $('#timeline').empty();
+        axios.get('http://localhost:3000/tweets/timeline')
+             .then(function(response){
+               console.log('response-',response);
+               response.data.Tweets.forEach(tweets => {
+                 showTimelines(tweets)
+               })
+               // console.log(response.data.Tweets);//array
+               // console.log(response.data.Tweets[0].text);
+               // console.log(response.data.Tweets[0].user.name);
+               // console.log(response.data.Tweets[0].user.screen_name);
+             })
+             .catch(function(error){
+               console.log('error-', error);
+             })
+      }
+
+      function showTimelines(tweets){
+        let timeline = document.querySelector('#timeline')
+        let tlContent = document.createElement('div')
+        tlContent.setAttribute('class', 'tlClass')
+        let name = document.createElement('h4')
+        name.innerHTML = `${tweets.user.name} @${tweets.user.screen_name}`
+        let tweetContent = document.createElement('span')
+        tweetContent.innerHTML = tweets.text
+        tlContent.appendChild(name)
+        tlContent.appendChild(tweetContent)
+        timeline.appendChild(tlContent)
+      }
+
+      function searchTweets(){
+        $('#timeline').empty();
+        let txtSearch = document.querySelector('#searchTweets')
+        let searchValue = txtSearch.value
+        console.log(searchValue);
+        axios.get('http://localhost:3000/tweets/search', {
+          params: {search: searchValue}
+        })
+             .then(function(response) {
+               console.log('response- ',response);
+               console.log(response.data.Tweets.statuses);
+               let tweetsresult = response.data.Tweets.statuses
+               tweetsresult.forEach(tweets =>{
+                 showTimelines(tweets)
+               })
+             })
+             .catch(function(error) {
+               console.log('error', error);
+             })
+      }
+    </script>
+  </body>
+</html>
